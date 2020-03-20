@@ -205,7 +205,8 @@ class XmpTag(object):
             if type_.lower().startswith('closed choice of'):
                 type_ = type[17:]
 
-            self._value = [self._convert_to_python(v, type_) for v in self._raw_value]
+            self._value = [self._convert_to_python(v, type_) 
+                           for v in self._raw_value]
 
         elif self.type == 'Lang Alt':
             self._value = {}
@@ -216,7 +217,8 @@ class XmpTag(object):
                     raise XmpValueError(self._raw_value, self.type)
 
         elif self.type.lower().startswith('closed choice of'):
-            self._value = self._convert_to_python(self._raw_value, self.type[17:])
+            self._value = self._convert_to_python(self._raw_value, 
+                                                  self.type[17:])
 
         elif self.type == '':
             self._value = self._raw_value
@@ -253,7 +255,8 @@ class XmpTag(object):
                 value = {'x-default': value}
 
             if not isinstance(value, dict):
-                raise TypeError('Expecting a dictionary mapping language codes to values')
+                raise TypeError('Expecting a dictionary mapping language '\
+                                'codes to values')
 
             raw_value = {}
             for k, v in value.items():
