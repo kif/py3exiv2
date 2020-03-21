@@ -3,7 +3,7 @@
 # ******************************************************************************
 #
 # Copyright (C) 2009-2011 Olivier Tilloy <olivier@tilloy.net>
-# Copyright (C) 2015 Vincent Vande Vyvre <vincent.vandevyvre@oqapy.eu>
+# Copyright (C) 2015-2020 Vincent Vande Vyvre <vincent.vandevyvre@oqapy.eu>
 #
 # This file is part of the pyexiv2 distribution.
 #
@@ -82,43 +82,47 @@ class TestXmpTag(unittest.TestCase):
         self.assertEqual(tag._convert_to_python('1999-10', 'Date'),
                          datetime.date(1999, 10, 1))
         self.assertEqual(tag._convert_to_python('1999-10-13', 'Date'),
-                         datetime.date(1999, 10, 13))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:24.888', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3,24,int(0.888*10**6)),
+                         datetime.datetime(1999, 10, 13))
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:24.888Z', 
+                         'Date'),
+                         datetime.datetime(1999, 10, 13, 5, 3,24,int(0.888*10**6)))
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:24.888Z', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3,24,int(0.888*10**6),
-                         tzinfo=FixedOffset()),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03Z', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03+06:00', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 
+                                            tzinfo=FixedOffset('+', 6, 0)),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03Z', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, tzinfo=FixedOffset()),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03-06:00', 'Date') 
+                         - datetime.datetime(1999, 10, 13, 5, 3, 
+                                            tzinfo=FixedOffset('-', 6, 0)),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03+06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, tzinfo=FixedOffset('+', 6, 0)),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54Z', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03-06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, tzinfo=FixedOffset('-', 6, 0)),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54+06:00', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54, 
+                                            tzinfo=FixedOffset('+', 6, 0)),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54Z', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, tzinfo=FixedOffset()),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54-06:00', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54, 
+                                            tzinfo=FixedOffset('-', 6, 0)),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54+06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, tzinfo=FixedOffset('+', 6, 0)),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721Z', 'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54, 721000),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54-06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, tzinfo=FixedOffset('-', 6, 0)),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721+06:00', 
+                                                'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54, 721000, 
+                                            tzinfo=FixedOffset('+', 6, 0)),
                          datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721Z', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, 721000, tzinfo=FixedOffset()),
-                         datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721+06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, 721000, tzinfo=FixedOffset('+', 6, 0)),
-                         datetime.timedelta(0))
-        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721-06:00', 'Date') - \
-                         datetime.datetime(1999, 10, 13, 5, 3, 54, 721000, tzinfo=FixedOffset('-', 6, 0)),
+        self.assertEqual(tag._convert_to_python('1999-10-13T05:03:54.721-06:00', 
+                                                'Date')
+                         - datetime.datetime(1999, 10, 13, 5, 3, 54, 721000, 
+                                            tzinfo=FixedOffset('-', 6, 0)),
                          datetime.timedelta(0))
         # Invalid values
         self.assertRaises(XmpValueError, tag._convert_to_python, 'invalid', 'Date')
@@ -128,7 +132,6 @@ class TestXmpTag(unittest.TestCase):
         self.assertRaises(XmpValueError, tag._convert_to_python, '2009-10-32', 'Date')
         self.assertRaises(XmpValueError, tag._convert_to_python, '2009-10-30T25:12Z', 'Date')
         self.assertRaises(XmpValueError, tag._convert_to_python, '2009-10-30T23:67Z', 'Date')
-        self.assertRaises(XmpValueError, tag._convert_to_python, '2009-01-22T21', 'Date')
 
     def test_convert_to_string_date(self):
         # Valid values
@@ -239,7 +242,7 @@ class TestXmpTag(unittest.TestCase):
         self.assertEqual(tag._convert_to_python('Python Software Foundation', 'ProperName'), 
                                                 'Python Software Foundation')
         # Invalid values
-        self.assertRaises(XmpValueError, tag._convert_to_python(None, 'ProperName'))
+        self.assertRaises(XmpValueError, tag._convert_to_python, None, 'ProperName')
 
     def test_convert_to_string_propername(self):
         # Valid values
@@ -259,7 +262,7 @@ class TestXmpTag(unittest.TestCase):
         self.assertEqual(tag._convert_to_python(b'Some text with exotic ch\xc3\xa0r\xc3\xa4ct\xc3\xa9r\xca\x90.', 'Text'),
                          'Some text with exotic chàräctérʐ.')
         # Invalid values
-        self.assertRaises(XmpValueError, tag._convert_to_python(None, 'Text'))
+        self.assertRaises(XmpValueError, tag._convert_to_python, None, 'Text')
 
     def test_convert_to_string_text(self):
         # Valid values
