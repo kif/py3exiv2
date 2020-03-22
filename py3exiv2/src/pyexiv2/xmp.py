@@ -84,7 +84,7 @@ class XmpTag(object):
 
     # strptime is not flexible enough to handle all valid Date formats, we use a
     # custom regular expression
-    _time_zone_re = r'Z|((?P<sign>\+|-)(?P<ohours>\d{2}):(?P<ominutes>\d{2}))'
+    _time_zone_re = r'$|Z|((?P<sign>\+|-)(?P<ohours>\d{2}):(?P<ominutes>\d{2}))'
 
     _time_re = r'(?P<hours>\d{2})(:(?P<minutes>\d{2})(:(?P<seconds>\d{2})(.(?P<decimal>\d+))?)?(?P<tzd>%s))?' % _time_zone_re
 
@@ -307,8 +307,10 @@ class XmpTag(object):
         elif type_ == 'Date':
             try:
                 v = value.replace("Z", "")
+                # New in Python-3.7
+                # FIXME this break unitest, maybe add a FixedOffset() ...
                 return datetime.datetime.fromisoformat(v)
-            except ValueError:
+            except:
                 pass
 
             match = self._date_re.match(value)

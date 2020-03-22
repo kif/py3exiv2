@@ -96,7 +96,7 @@ class TestPicklingTags(unittest.TestCase):
         tags = []
         tags.append(XmpTag('Xmp.dc.subject', ['foo', 'bar', 'baz']))
         tags.append(XmpTag('Xmp.xmpRights.Marked', True))
-        tags.append(XmpTag('Xmp.xmp.CreateDate', datetime.datetime.now()))
+        tags.append(XmpTag('Xmp.xmp.CreateDate', datetime.date.today()))
         tags.append(XmpTag('Xmp.xmpMM.SaveID', 34))
         tags.append(XmpTag('Xmp.dc.format', ('image', 'jpeg')))
         tags.append(XmpTag('Xmp.photoshop.CaptionWriter', 'John Doe'))

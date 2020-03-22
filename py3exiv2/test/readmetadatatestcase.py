@@ -26,7 +26,7 @@
 # ******************************************************************************
 
 import pyexiv2
-from pyexiv2.utils import is_fraction, make_fraction
+from pyexiv2.utils import FixedOffset, is_fraction, make_fraction
 
 import unittest
 import os.path
@@ -49,6 +49,7 @@ class ReadMetadataTestCase(unittest.TestCase):
             self.assert_(is_fraction(tag.value))
         else:
             self.assert_(isinstance(tag.value, etype))
+
         self.assertEqual(tag.value, evalue)
 
     def check_type_and_values(self, tag, etype, evalues):
@@ -121,7 +122,8 @@ class ReadMetadataTestCase(unittest.TestCase):
                    ('Xmp.exif.ColorSpace', int, 1),
                    ('Xmp.exif.DateTimeOriginal',
                     datetime.datetime,
-                    datetime.datetime(2002, 7, 13, 15, 58, 28)),
+                    datetime.datetime(2002, 7, 13, 15, 58, 28,
+                                        tzinfo=FixedOffset())),
                    ('Xmp.exif.ExifVersion', str, '0200'),
                    ('Xmp.exif.ExposureBiasValue', FRACTION, make_fraction(-13, 20)),
                    ('Xmp.exif.ExposureProgram', int, 4),
@@ -141,7 +143,8 @@ class ReadMetadataTestCase(unittest.TestCase):
                    ('Xmp.exif.GPSMapDatum', str, 'WGS84'),
                    ('Xmp.exif.GPSTimeStamp',
                     datetime.datetime,
-                    datetime.datetime(2002, 7, 13, 14, 58, 24)),
+                    datetime.datetime(2002, 7, 13, 14, 58, 24,
+                                        tzinfo=FixedOffset())),
                    ('Xmp.exif.GPSVersionID', str, '2.0.0.0'),
                    ('Xmp.exif.ISOSpeedRatings', list, [0]),
                    ('Xmp.exif.MeteringMode', int, 5),
@@ -157,7 +160,7 @@ class ReadMetadataTestCase(unittest.TestCase):
                    ('Xmp.photoshop.City', str, ' '),
                    ('Xmp.photoshop.Country', str, 'Ubited Kingdom'),
                    ('Xmp.photoshop.Credit', str, 'Ian Britton'),
-                   ('Xmp.photoshop.DateCreated', datetime.date, datetime.datetime(2002, 6, 20)),
+                   ('Xmp.photoshop.DateCreated', datetime.date, datetime.date(2002, 6, 20)),
                    ('Xmp.photoshop.Headline', str, 'Communications'),
                    ('Xmp.photoshop.State', str, ' '),
                    ('Xmp.photoshop.SupplementalCategories', list, ['Communications']),
@@ -181,10 +184,12 @@ class ReadMetadataTestCase(unittest.TestCase):
                    ('Xmp.tiff.YResolution', FRACTION, make_fraction(300, 1)),
                    ('Xmp.xmp.CreateDate',
                     datetime.datetime,
-                    datetime.datetime(2002, 7, 13, 15, 58, 28)),
+                    datetime.datetime(2002, 7, 13, 15, 58, 28, 
+                                        tzinfo=FixedOffset())),
                    ('Xmp.xmp.ModifyDate',
                     datetime.datetime,
-                    datetime.datetime(2002, 7, 19, 13, 28, 10)),
+                    datetime.datetime(2002, 7, 19, 13, 28, 10, 
+                                        tzinfo=FixedOffset())),
                    ('Xmp.xmpBJ.JobRef', list, []),
                    ('Xmp.xmpBJ.JobRef[1]', str, ''),
                    ('Xmp.xmpBJ.JobRef[1]/stJob:name', str, 'Photographer'),
