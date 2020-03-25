@@ -1,5 +1,8 @@
 PYTHON3-EXIV2
 
+Change in 0.7.2  Wed, 25 Mar 2020
+ * Add a datetime conversion to Python with iso format, update some unittests
+  
 Change in 0.7.1  Sat, 28 May 2019
  * Minor changes in order to compile on OS X platform
 
