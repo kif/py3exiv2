@@ -7,7 +7,6 @@
 import sys
 import os
 import glob
-import subprocess
 import platform
 
 from setuptools import setup, find_packages, Extension
@@ -38,7 +37,8 @@ if platform.system() == "Darwin":
     print(boostlib)
 
 else:
-    boostlib = 'boost_python3'
+    python_version = str(sys.version_info.major) + str(sys.version_info.minor)
+    boostlib = 'boost_python' + python_version
 
 setup(
     name='py3exiv2',
@@ -57,12 +57,12 @@ setup(
         'Topic :: Software Development',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: C++',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8'
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9'
     ],
     keywords='exiv2 pyexiv2 EXIF IPTC XMP image metadata',
     packages = find_packages('src'),
