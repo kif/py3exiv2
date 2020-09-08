@@ -98,6 +98,7 @@ class XmpTag(object):
         Args:
         key -- the key of the tag
         value -- the value of the tag
+        _tag -- an existing tag
         """
         super(XmpTag, self).__init__()
         if _tag is not None:
