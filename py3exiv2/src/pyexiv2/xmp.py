@@ -85,11 +85,8 @@ class XmpTag(object):
     # strptime is not flexible enough to handle all valid Date formats, we use a
     # custom regular expression
     _time_zone_re = r'$|Z|((?P<sign>\+|-)(?P<ohours>\d{2}):(?P<ominutes>\d{2}))'
-
     _time_re = r'(?P<hours>\d{2})(:(?P<minutes>\d{2})(:(?P<seconds>\d{2})(.(?P<decimal>\d+))?)?(?P<tzd>%s))?' % _time_zone_re
-
     _date_re = re.compile(r'(?P<year>\d{4})(-(?P<month>\d{2})(-(?P<day>\d{2})(T(?P<time>%s))?)?)?' % _time_re)
-
 
     def __init__(self, key, value=None, _tag=None):
         """The tag can be initialized with an optional value which expected
@@ -252,6 +249,10 @@ class XmpTag(object):
             stype = self.type[4:]
             if stype.lower().startswith('closed choice of'):
                 stype = stype[17:]
+
+            elif stype.endswith("Detail"):
+                stype = "Text"
+
             self.raw_value = [self._convert_to_string(v, stype) for v in value]
 
         elif type_ == 'LangAlt':
@@ -319,7 +320,6 @@ class XmpTag(object):
                 raise XmpValueError(value, type_)
 
             gd = match.groupdict()
-            print(gd)
             if gd['month'] is not None:
                 month = int(gd['month'])
 
@@ -341,7 +341,6 @@ class XmpTag(object):
             else:
                 if gd['minutes'] is None:
                     # Malformed time
-                    print(value, type_)
                     raise XmpValueError(value, type_)
 
                 if gd['seconds'] is not None:
