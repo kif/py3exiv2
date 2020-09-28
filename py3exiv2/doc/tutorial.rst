@@ -257,6 +257,30 @@ If the tag was not present, one is created and its value is set::
 
   >>> metadata[key] = value
 
+Accessing to the tags of type `XmpSeq <Property>Detail`.
+Example with `Xmp.plus.Licensor` wich is type `XmpSeq LicensorDetail`::
+
+   >>> base = "Xmp.plus.Licensor"
+   >>> # Always chek if the tag already exists
+   >>> try:
+   >>>     seq = data[base]
+   >>> except KeyError:
+   >>>     # Tag not set, create one. Note the value [""]
+   >>>     tag = pyexiv2.xmp.XmpTag(base, [""])
+   >>>     data[base] = tag
+   >>> key = "".join([base, "[1]/plus:LicensorID"])
+   >>> datum = pyexiv2.xmp.XmpTag(key, "https://iptc.org")
+   >>> data[key] = datum
+   >>> key = "".join([base, "[1]/plus:LicensorName"])
+   >>> datum = pyexiv2.xmp.XmpTag(key, "John Doe")
+   >>> data[key] = datum
+   >>> key = "".join([base, "[1]/plus:LicensorCountry"])
+   >>> datum = pyexiv2.xmp.XmpTag(key, "USA")
+   >>> data[key] = datum
+   >>> key = "".join([base, "[1]/plus:LicensorCity"])
+   >>> datum = pyexiv2.xmp.XmpTag(key, "Washington")
+   >>> data[key] = datum
+
 If you need to write custom metadata, you can register a custom XMP namespace::
 
   >>> pyexiv2.xmp.register_namespace('http://example.org/foo/', 'foo')
