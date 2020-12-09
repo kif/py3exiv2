@@ -1,5 +1,8 @@
 PYTHON3-EXIV2
 
+Change in 0.8.0  Mon, 28 Sep 2020
+ * Add support for tag XmpSeq <property>Detail
+
 Change in 0.7.2  Wed, 25 Mar 2020
  * Add a datetime conversion to Python with iso format, update some unittests
   

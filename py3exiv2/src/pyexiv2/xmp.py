@@ -239,8 +239,16 @@ class XmpTag(object):
         if type_ == 'XmpText':
             stype = self.type
             if stype.lower().startswith('closed choice of'):
-                stype = stype[17:]
-            self.raw_value = self._convert_to_string(value, stype)
+                self.raw_value = self._convert_to_string(value, stype[17:])
+
+            else:
+                stype = "Text"
+                if isinstance(value, (list, tuple)):
+                    self.raw_value = [self._convert_to_string(v, stype) 
+                                        for v in value]
+
+                else:
+                    self.raw_value = self._convert_to_string(value, stype)
 
         elif type_ in ('XmpAlt', 'XmpBag', 'XmpSeq'):
             if not isinstance(value, (list, tuple)):
@@ -251,6 +259,12 @@ class XmpTag(object):
                 stype = stype[17:]
 
             elif stype.endswith("Detail"):
+                stype = "Text"
+
+            #elif stype == "Region" or self.type == "RegionInfo":
+                #stype = "Text"
+
+            else:
                 stype = "Text"
 
             self.raw_value = [self._convert_to_string(v, stype) for v in value]
@@ -369,9 +383,9 @@ class XmpTag(object):
                 except ValueError:
                     raise XmpValueError(value, type_)
 
-        elif type_ == 'Dimensions':
-            # TODO
-            raise NotImplementedError('XMP conversion for type [%s]' % type_)
+        elif type_ in ('RegionInfo', 'ContactInfo', 'Area', 'Dimensions'):
+            # 'Area' & 'Dimensions' are used with "Xmp.mwg-rs.Regions/mwg-rs:"
+            return value
 
         elif type_ == 'Font':
             # TODO
