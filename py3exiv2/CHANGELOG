@@ -1,5 +1,8 @@
 PYTHON3-EXIV2
 
+Change in 0.9.0  Wed, 09 Dec 2020
+ * Add support for tag Xmp.mwg-rs.Regions/mwg-rs:
+
 Change in 0.8.0  Mon, 28 Sep 2020
  * Add support for tag XmpSeq <property>Detail
 
