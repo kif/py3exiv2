@@ -179,6 +179,9 @@ class XmpTag(object):
         type_ = self._tag._getExiv2Type()
         
         if type_ == 'XmpText':
+            if not isinstance(value, str):
+                raise ValueError("Type XmpText need string value, not %s" % type(value))
+
             self._tag._setTextValue(value)
 
         elif type_ in ('XmpAlt', 'XmpBag', 'XmpSeq'):
@@ -238,7 +241,13 @@ class XmpTag(object):
         type_ = self._tag._getExiv2Type()
         if type_ == 'XmpText':
             stype = self.type
-            if stype.lower().startswith('closed choice of'):
+            if stype == "Boolean":
+                self.raw_value = self._convert_to_string(value, "Boolean")
+
+            elif stype == "Date":
+                self.raw_value = self._convert_to_string(value, stype)
+
+            elif stype.lower().startswith('closed choice of'):
                 self.raw_value = self._convert_to_string(value, stype[17:])
 
             else:
@@ -306,6 +315,9 @@ class XmpTag(object):
 
         Raise XmpValueError: if the conversion fails
         """
+        if value is None:
+            raise XmpValueError(value, type_)
+
         if type_ == 'Boolean':
             if value == 'True':
                 return True
@@ -321,6 +333,9 @@ class XmpTag(object):
             raise NotImplementedError('XMP conversion for type [%s]' % type_)
 
         elif type_ == 'Date':
+            if isinstance(value, datetime.date):
+                return value
+
             try:
                 v = value.replace("Z", "")
                 # New in Python-3.7
@@ -464,6 +479,9 @@ class XmpTag(object):
 
         Raise XmpValueError: if the conversion fails
         """
+        if value is None:
+            raise XmpValueError(value, type_)
+
         if type_ == 'Boolean':
             if isinstance(value, bool):
                 return str(value)
@@ -485,10 +503,24 @@ class XmpTag(object):
                 raise XmpValueError(value, type_)
 
         elif type_ == 'Integer':
-            if isinstance(value, int):
-                return str(value)
+            if not isinstance(value, int):
+                raise XmpValueError(value, type_)
 
-            else:
+            try:
+                return str(value)
+            except ValueError:
+                raise XmpValueError(value, type_)
+
+        elif type_ == 'Text':
+            if isinstance(value, (list, tuple)):
+                try:
+                    return " ".join([str(v) for v in value])
+                except ValueError:
+                    raise XmpValueError(value, type_)
+
+            try:
+                return str(value)
+            except ValueError:
                 raise XmpValueError(value, type_)
 
         elif type_ == 'MIMEType':
