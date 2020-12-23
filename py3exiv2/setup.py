@@ -17,7 +17,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 def get_libboost_osx():
@@ -28,10 +28,10 @@ def get_libboost_osx():
         for f in files:
             if not "-mt" in f:
                 return os.path.basename(f).replace("lib", "").split(".")[0]
-            
+
         print("NOT FOUND", files)
         sys.exit()
-    
+
 if platform.system() == "Darwin":
     boostlib = get_libboost_osx()
     print(boostlib)
